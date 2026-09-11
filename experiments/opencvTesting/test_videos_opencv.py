@@ -43,7 +43,36 @@ while True:
     """Option 2 for resizing by half"""
     resize_frame = cv2.resize(frame, None, fx = 0.5, fy = 0.5)
 
+    """Convert to grayscale"""
+    #grey_frame = cv2.cvtColor(resize_frame, cv2.COLOR_BGR2GRAY)
+
+    """Blurring"""
+    #blur_frame = cv2.GaussianBlur(resize_frame, (11,11), 0)
+
+    """Cropping Frames"""
+    #cropped_frame = resize_frame[100:600,200:900]
+
+    """Threshold the frames"""
+    #_, threshold_frame = cv2.threshold(grey_frame, 50, 255, cv2.THRESH_BINARY)
+
+    """Edge detection"""
+    """Canny Edge Detection"""
+    #canny_frame = cv2.Canny(grey_frame, 60, 200)
+
+    """Sobel Edge Detection"""
+    #sobel_frame_x = cv2.Sobel(grey_frame, cv2.CV_64F, 1, 0, ksize=3)
+    #sobel_frame_y = cv2.Sobel(grey_frame, cv2.CV_64F, 0, 1, ksize=3)
+    #sobel_frame = cv2.magnitude(sobel_frame_x, sobel_frame_y)
+    #sobel_frame = cv2.convertScaleAbs(sobel_frame)
+
+    """Displaying the frames"""
     cv2.imshow("Video", resize_frame)
+    #cv2.imshow("Grey Video", grey_frame)
+    #cv2.imshow("Blurred Video", blur_frame)
+    #cv2.imshow("Cropped Video", cropped_frame)
+    #cv2.imshow("Threshold Video", threshold_frame)
+    #cv2.imshow("Canny Edge Video", canny_frame)
+    #cv2.imshow("Sobel Edge Video", sobel_frame)
 
     if cv2.waitKey(int(1000/actual_fps)) & 0xFF == ord('q'):
         break
