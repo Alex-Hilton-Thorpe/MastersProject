@@ -65,6 +65,17 @@ while True:
     #sobel_frame = cv2.magnitude(sobel_frame_x, sobel_frame_y)
     #sobel_frame = cv2.convertScaleAbs(sobel_frame)
 
+    """Region of Interest (ROI) work"""
+    roi = resize_frame[400:500, 100:400]
+    roi_grey = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+    roi_grey_blur = cv2.GaussianBlur(roi_grey, (5,5), 0)
+    roi_grey_blur_canny = cv2.Canny(roi_grey_blur, 1, 125)
+
+    contours, _ = cv2.findContours(roi_grey_blur_canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contour_image = roi.copy()
+    cv2.drawContours(contour_image, contours, -1, (0, 255, 0), 2)
+
+
     """Displaying the frames"""
     cv2.imshow("Video", resize_frame)
     #cv2.imshow("Grey Video", grey_frame)
@@ -73,6 +84,9 @@ while True:
     #cv2.imshow("Threshold Video", threshold_frame)
     #cv2.imshow("Canny Edge Video", canny_frame)
     #cv2.imshow("Sobel Edge Video", sobel_frame)
+    #cv2.imshow("Region of Interest (ROI)", roi)
+    #cv2.imshow("ROI Canny edge", roi_grey_blur_canny)
+    cv2.imshow("Contours", contour_image)
 
     if cv2.waitKey(int(1000/actual_fps)) & 0xFF == ord('q'):
         break
