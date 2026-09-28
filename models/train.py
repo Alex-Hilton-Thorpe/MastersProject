@@ -5,6 +5,7 @@ from torchvision import transforms, datasets #transforms = tools for preparing/m
 from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import precision_score, recall_score, f1_score
 
 
 """Configuration"""
@@ -16,11 +17,9 @@ DEVICE = torch.device("cpu")
 
 train_transform = transforms.Compose(
     [transforms.Resize((128, 128)),
-    #transforms.RandomHorizontalFlip(),
-    #transforms.RandomRotation(10),
-    #transforms.RandomResizedCrop((128, 128)),
-    #transforms.RandomAffine(),
-    #transforms.ColorJitter(brightness=0.2, contrast=0.2),
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(10),
+    transforms.ColorJitter(brightness=0.2, contrast=0.2),
     transforms.ToTensor()])
 
 validation_transform = transforms.Compose(
@@ -66,7 +65,7 @@ class CNN(nn.Module):
 
         self.flatten = nn.Flatten()
 
-        self.fc = nn.Linear((16 * 63 * 63), 2) 
+        #self.fc = nn.Linear((16 * 63 * 63), 2) 
         # This is a linear layer that takes the flattened output of the convolutional layers and maps it to 6 output classes 
         # Basically 16 = out_channels, 63 = (128 - 3) / 2 (rounded down) = 63 (after convolution (-3+1) and pooling (/2))
 
@@ -76,7 +75,7 @@ class CNN(nn.Module):
             kernel_size=3,
         )
 
-        #self.fc = nn.Linear((32 * 30 * 30), 2)
+        self.fc = nn.Linear((32 * 30 * 30), 2)
         # Linear layer
         # 63 -> Conv3: 63 - 3 + 1 = 61
         # 61 -> Pool2: floor(61 / 2) = 30
@@ -87,9 +86,9 @@ class CNN(nn.Module):
         x = self.conv1(x)
         x = self.relu(x)
         x = self.pool(x)
-        #x = self.conv2(x)
-        #x = self.relu(x)
-        #x = self.pool(x)
+        x = self.conv2(x)
+        x = self.relu(x)
+        x = self.pool(x)
         x = self.flatten(x)
         x = self.dropout(x)
         x = self.fc(x)
@@ -149,6 +148,8 @@ for epoch in range(EPOCHS):
 
 model.eval()
 
+print(validation_dataset.classes)
+
 all_labels = []
 all_predictions = []
 
@@ -161,6 +162,14 @@ with torch.no_grad():
         all_predictions.extend(predictions.tolist())
 
 cm = confusion_matrix(all_labels, all_predictions)
+
+precision = precision_score(all_labels, all_predictions, pos_label = 0)
+recall = recall_score(all_labels, all_predictions, pos_label = 0)
+f1 = f1_score(all_labels, all_predictions, pos_label = 0)
+
+print(f"Precision: {precision:.2f} \n")
+print(f"Recall: {recall:.2f} \n")
+print(f"F1 Score: {f1:.2f} \n")
 
 disp = ConfusionMatrixDisplay(
     confusion_matrix=cm,
