@@ -24,13 +24,13 @@ def writer_worker(frame_queue, video_writer, stats):
     video_writer.release()
 
 pipeline_left = ("v4l2src device=/dev/video0 ! "
-            "video/x-raw, width=1280, height=720, framerate=30/1 ! "
+            "video/x-raw, width=1280, height=720, framerate=60/1 ! "
             "videoconvert ! "
             "video/x-raw, format=BGR ! "
             "appsink drop=true max-buffers=1")
 
 pipeline_right = ("v4l2src device=/dev/video2 ! "
-            "video/x-raw, width=1280, height=720, framerate=30/1 ! "
+            "video/x-raw, width=1280, height=720, framerate=60/1 ! "
             "videoconvert ! "
             "video/x-raw, format=BGR ! "
             "appsink drop=true max-buffers=1")
@@ -174,8 +174,8 @@ while True:
             height_l, width_l = frame_l.shape[:2]
             height_r, width_r = frame_r.shape[:2]
             fourcc = cv2.VideoWriter_fourcc(*'MJPG') #Video codec for AVI files. Compresses individual frames as jpg
-            video_writer_l = cv2.VideoWriter(str(filename_l), fourcc, 30.0, (width_l, height_l))
-            video_writer_r = cv2.VideoWriter(str(filename_r), fourcc, 30.0, (width_r, height_r))
+            video_writer_l = cv2.VideoWriter(str(filename_l), fourcc, 60.0, (width_l, height_l))
+            video_writer_r = cv2.VideoWriter(str(filename_r), fourcc, 60.0, (width_r, height_r))
             #Creates video writer
             #fourcc = chosen codec
         
