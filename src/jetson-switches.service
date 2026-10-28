@@ -1,0 +1,17 @@
+[Unit]
+Description=Jetson power and record switches
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 -u /home/alex/MastersProject/src/start_all.py
+WorkingDirectory=/home/alex/MastersProject/src
+User=root
+Restart=on-failure
+RestartSec=3
+# Only signal the main process on stop, so start_all.py can shut the others down cleanly
+KillMode=mixed
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
