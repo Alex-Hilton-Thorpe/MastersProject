@@ -3,6 +3,13 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# Recorded video files
+recordings/
+*.mp4
+*.avi
+*.mov
+*.mkv
+
 # Data files
 data/
 
