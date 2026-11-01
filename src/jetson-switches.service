@@ -11,7 +11,8 @@ Restart=on-failure
 RestartSec=3
 # Only signal the main process on stop, so start_all.py can shut the others down cleanly
 KillMode=mixed
-TimeoutStopSec=30
+# Long enough for the camera files to finalize and remux before systemd force-kills
+TimeoutStopSec=700
 
 [Install]
 WantedBy=multi-user.target
